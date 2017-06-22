@@ -4,17 +4,13 @@ Ownable
 erc20 transfer bug
 safemath
 
-contract ApproveAndCallFallBack {
-    function receiveApproval(address from, uint256 _amount, address _token, bytes _data);
-}
-
 /// @dev The actual token contract, the default owner is the msg.sender
 contract GoldMemberToken {
 
-    string public name;                //Token's name
-    uint8 public decimals = 18;        //Number of decimals of the smallest unit
-    string public symbol;              //Identifier
-    string public version;             //An arbitrary versioning scheme
+    string public name;                // Token's name
+    uint8 public decimals = 18;        // Number of decimals of the smallest unit
+    string public symbol;              // Identifier
+    string public version;             // An arbitrary versioning scheme
 
 
     /// @dev `Checkpoint` is the structure that attaches a block number to a
@@ -90,7 +86,6 @@ contract GoldMemberToken {
         creationBlock = block.number;
     }
 
-
     ///////////////////
     // ERC20 Methods
     ///////////////////
@@ -99,8 +94,7 @@ contract GoldMemberToken {
     /// @param _to The address of the recipient
     /// @param _amount The amount of tokens to be transferred
     /// @return Whether the transfer was successful or not
-    function transfer(address _to, uint256 _amount) 
-        returns (bool success) {
+    function transfer(address _to, uint256 _amount) returns (bool success) {
 
         if (!transfersEnabled) throw;
         return doTransfer(msg.sender, _to, _amount);
@@ -112,8 +106,7 @@ contract GoldMemberToken {
     /// @param _to The address of the recipient
     /// @param _amount The amount of tokens to be transferred
     /// @return True if the transfer was successful
-    function transferFrom(address _from, address _to, uint256 _amount) 
-        returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _amount) returns (bool success) {
 
         if (!transfersEnabled) throw;
 
@@ -129,8 +122,7 @@ contract GoldMemberToken {
     /// @param _to The address of the recipient
     /// @param _amount The amount of tokens to be transferred
     /// @return True if the transfer was successful
-    function doTransfer(address _from, address _to, uint _amount) 
-        internal returns(bool) {
+    function doTransfer(address _from, address _to, uint _amount) internal returns(bool) {
 
            if (parentSnapShotBlock >= block.number) throw;
 
@@ -173,13 +165,12 @@ contract GoldMemberToken {
     /// @param _amount The amount of tokens to be approved for transfer
     /// @return True if the approval was successful
     function approve(address _spender, uint256 _amount) returns (bool success) {
-        if (!transfersEnabled) throw;
 
         // To change the approve amount you first have to reduce the addresses`
         //  allowance to zero by calling `approve(_spender,0)` if it is not
         //  already 0 to mitigate the race condition described here:
         //  https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-        if ((_amount!=0) && (allowed[msg.sender][_spender] !=0)) throw;
+        if ((_amount != 0) && (allowed[msg.sender][_spender] != 0)) throw;
 
         allowed[msg.sender][_spender] = _amount;
         Approval(msg.sender, _spender, _amount);
@@ -191,30 +182,8 @@ contract GoldMemberToken {
     /// @param _spender The address of the account able to transfer the tokens
     /// @return Amount of remaining tokens of _owner that _spender is allowed
     ///  to spend
-    function allowance(address _owner, address _spender
-    ) constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
         return allowed[_owner][_spender];
-    }
-
-    /// @notice `msg.sender` approves `_spender` to send `_amount` tokens on
-    ///  its behalf, and then a function is triggered in the contract that is
-    ///  being approved, `_spender`. This allows users to use their tokens to
-    ///  interact with contracts in one function call instead of two
-    /// @param _spender The address of the contract able to transfer the tokens
-    /// @param _amount The amount of tokens to be approved for transfer
-    /// @return True if the function call was successful
-    function approveAndCall(address _spender, uint256 _amount, bytes _extraData
-    ) returns (bool success) {
-        if (!approve(_spender, _amount)) throw;
-
-        ApproveAndCallFallBack(_spender).receiveApproval(
-            msg.sender,
-            _amount,
-            this,
-            _extraData
-        );
-
-        return true;
     }
 
     /// @dev This function makes it easy to get the total number of tokens
