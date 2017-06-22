@@ -1,30 +1,13 @@
 pragma solidity ^0.4.6;
 
-/*
-    Copyright 2017, Jordi Baylina
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 /// @title MilestoneTracker Contract
-/// @author Jordi Baylina
-/// @dev This contract controls the issuance of tokens for the MiniMe Token
+/// @dev This contract controls the issuance of tokens for the GoldMember Token
 ///  Contract. This version specifically acts as a Campaign manager for raising
 ///  funds for non-profit causes, but it can be customized for any variety of
 ///  purposes.
 
-import "MiniMeToken.sol";
+import "GoldMemberToken.sol";
 
 
 /// @dev `Owned` is a base level contract that assigns an `owner` that can be
@@ -48,7 +31,7 @@ contract Owned {
 }
 
 
-/// @dev This is designed to control the issuance of a MiniMe Token for a
+/// @dev This is designed to control the issuance of a GoldMember Token for a
 ///  non-profit Campaign. This contract effectively dictates the terms of the
 ///  funding round.
 
@@ -58,7 +41,7 @@ contract Campaign is TokenController, Owned {
     uint public endFundingTime;         // In UNIX Time Format
     uint public maximumFunding;         // In wei
     uint public totalCollected;         // In wei
-    MiniMeToken public tokenContract;   // The new token for this Campaign
+    GoldMemberToken public tokenContract;   // The new token for this Campaign
     address public vaultAddress;        // The address to hold the funds donated
 
 /// @notice 'Campaign()' initiates the Campaign by setting its funding
@@ -91,7 +74,7 @@ contract Campaign is TokenController, Owned {
         startFundingTime = _startFundingTime;
         endFundingTime = _endFundingTime;
         maximumFunding = _maximumFunding;
-        tokenContract = MiniMeToken(_tokenAddress);// The Deployed Token Contract
+        tokenContract = GoldMemberToken(_tokenAddress);// The Deployed Token Contract
         vaultAddress = _vaultAddress;
     }
 
